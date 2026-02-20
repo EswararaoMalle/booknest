@@ -1,12 +1,15 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -17,6 +20,8 @@ export default function Register() {
     }
 
     try {
+      setLoading(true);
+
       await axios.post("http://localhost:5000/api/users/register", {
         name,
         email,
@@ -24,54 +29,109 @@ export default function Register() {
         role,
       });
 
-      alert("Registered Successfully!");
-      navigate("/");
+      alert("Registered Successfully ✅");
+      navigate("/login"); // ✅ better than "/" because landing is public
     } catch (err) {
-      alert("Registration Failed");
+      alert(err?.response?.data?.message || "Registration Failed");
+    } finally {
+      setLoading(false);
     }
   };
 
+  const onKeyDown = (e) => {
+    if (e.key === "Enter") register();
+  };
+
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>BookStore Register</h2>
+    <>
+      <Navbar />
 
-        <input
-          type="text"
-          placeholder="Enter Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+      {/* Optional hero */}
+      <section className="hero" style={{ paddingBottom: "0" }}>
+        <div className="hero-inner" style={{ paddingBottom: "20px" }}>
+          <div>
+            <div className="hero-chip">🚀 Create Account</div>
+            <h1 style={{ fontSize: "34px" }}>Join BookNest</h1>
+            <p>
+              Register as a <b>User</b> to buy books or <b>Seller</b> to add
+              books.
+            </p>
+          </div>
+          <div className="hero-card">
+            <b>Choose Role</b>
+            <ul>
+              <li>User → browse, cart, orders</li>
+              <li>Seller → add & manage books</li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
-        <input
-          type="email"
-          placeholder="Enter Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+      <div className="auth-wrap">
+        <div className="auth-card">
+          <h2>Register</h2>
+          <p className="muted" style={{ marginTop: "-6px" }}>
+            Create a new account in seconds
+          </p>
 
-        <input
-          type="password"
-          placeholder="Enter Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <div className="stack">
+            <input
+              className="input"
+              type="text"
+              placeholder="Full Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onKeyDown={onKeyDown}
+            />
 
-        <select
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          style={{ marginTop: "10px", padding: "8px", width: "100%" }}
-        >
-          <option value="user">User</option>
-          <option value="seller">Seller</option>
-        </select>
+            <input
+              className="input"
+              type="email"
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={onKeyDown}
+            />
 
-        <button onClick={register}>Register</button>
+            <input
+              className="input"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={onKeyDown}
+            />
 
-        <p>
-          Already have an account? <Link to="/">Login</Link>
-        </p>
+            {/* ✅ Styled select (uses same .input) */}
+            <select
+              className="input"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
+              <option value="user">User (Buy Books)</option>
+              <option value="seller">Seller (Add Books)</option>
+            </select>
+
+            <button
+              className="btn btn-primary"
+              onClick={register}
+              disabled={loading}
+              style={{ opacity: loading ? 0.8 : 1 }}
+            >
+              {loading ? "Creating..." : "Create Account"}
+            </button>
+          </div>
+
+          <p className="auth-note">
+            Already have an account?{" "}
+            <Link to="/login" style={{ color: "var(--accent)", fontWeight: 900 }}>
+              Login
+            </Link>
+          </p>
+        </div>
       </div>
-    </div>
+
+      <Footer />
+    </>
   );
 }

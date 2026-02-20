@@ -10,41 +10,52 @@ export default function Navbar() {
   };
 
   return (
-    <div className="navbar">
-      <h2 onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
-        BookNest
-      </h2>
+    <header className="navbar">
+      <div className="navbar-inner">
+        {/* BRAND */}
+       <div className="brand" onClick={() => navigate("/")}>
+  <div className="brand-icon">BN</div>
+  <span>BookNest</span>
+</div>
 
-      {/* GUEST */}
-      {!user && (
-        <div>
-          <Link to="/login">Login</Link>
-          <Link to="/register" style={{ marginLeft: "12px" }}>
-            Register
-          </Link>
-        </div>
-      )}
 
-      {/* LOGGED IN */}
-      {user && (
-        <div>
-          {user.role === "admin" ? (
-            <Link to="/admin">Admin Dashboard</Link>
-          ) : user.role === "seller" ? (
-            <Link to="/seller">Seller Dashboard</Link>
-          ) : (
+
+        {/* NAV LINKS */}
+        <nav className="nav-links">
+          {/* GUEST */}
+          {!user && (
             <>
-              <Link to="/home">Home</Link>{" | "}
-              <Link to="/cart">Cart</Link>{" | "}
-              <Link to="/orders">Orders</Link>{" | "}
+              <Link className="nav-link" to="/login">Login</Link>
+              <Link className="btn btn-primary" to="/register">Register</Link>
             </>
           )}
 
-          <button onClick={logout} className="logout-btn" style={{ marginLeft: "12px" }}>
-            Logout
-          </button>
-        </div>
-      )}
-    </div>
+          {/* LOGGED IN */}
+          {user && (
+            <>
+              {user.role === "admin" && (
+                <Link className="nav-link" to="/admin">Admin</Link>
+              )}
+
+              {user.role === "seller" && (
+                <Link className="nav-link" to="/seller">Seller</Link>
+              )}
+
+              {user.role === "user" && (
+                <>
+                  <Link className="nav-link" to="/home">Home</Link>
+                  <Link className="nav-link" to="/cart">Cart</Link>
+                  <Link className="nav-link" to="/orders">Orders</Link>
+                </>
+              )}
+
+              <button className="btn btn-ghost" onClick={logout}>
+                Logout
+              </button>
+            </>
+          )}
+        </nav>
+      </div>
+    </header>
   );
 }
