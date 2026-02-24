@@ -9,6 +9,8 @@ It supports **role-based access control** with:
 * 🛡️ Admin
 
 The system allows users to browse books, place orders, track order status, while sellers manage books and orders, and admins control the entire platform.
+Project Demo Video
+https://drive.google.com/file/d/1dLsHwAoB6lN__D6xQmDTb6cM2wRFABb1/view?usp=sharing
 
 ---
 
@@ -256,3 +258,4 @@ BookNest demonstrates:
 
 Your Name
 Eswararao Malle
+
